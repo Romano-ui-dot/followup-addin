@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OfficeApp
+  xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+  xsi:type="TaskPaneApp">
+
+  <!-- ID fixo só para sideload de teste. Pode manter este. -->
+  <Id>d3b9f1a2-6c4e-4b8a-9f21-7a5c2e8d1b40</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>Follow-up FUP</ProviderName>
+  <DefaultLocale>pt-BR</DefaultLocale>
+  <DisplayName DefaultValue="Follow-up (teste)" />
+  <Description DefaultValue="Add-in de validacao: le e grava no arquivo aberto." />
+
+  <!-- ===================================================================
+       TROQUE as 3 URLs abaixo pela URL HTTPS onde voce hospedar o
+       taskpane.html. Ex.: https://SEU-SITE/taskpane.html
+       As duas de icone podem apontar pro mesmo lugar ou um PNG qualquer.
+       =================================================================== -->
+  <IconUrl DefaultValue="https://SUBSTITUA-PELA-SUA-URL/icon32.png" />
+  <HighResolutionIconUrl DefaultValue="https://SUBSTITUA-PELA-SUA-URL/icon64.png" />
+
+  <Hosts>
+    <Host Name="Workbook" />
+  </Hosts>
+
+  <DefaultSettings>
+    <!-- URL do taskpane.html hospedado -->
+    <SourceLocation DefaultValue="https://SUBSTITUA-PELA-SUA-URL/taskpane.html" />
+  </DefaultSettings>
+
+  <Permissions>ReadWriteDocument</Permissions>
+</OfficeApp>

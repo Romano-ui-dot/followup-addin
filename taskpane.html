@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Follow-up — Teste de Add-in</title>
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <style>
+    body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 16px; color: #1b1b1b; background:#faf9f8; }
+    h1 { font-size: 16px; margin: 0 0 4px; }
+    p.sub { font-size: 12px; color:#555; margin: 0 0 16px; }
+    button { display:block; width:100%; padding:10px 12px; margin:8px 0; font-size:14px;
+      border:0; border-radius:6px; cursor:pointer; background:#217346; color:#fff; }
+    button:disabled { background:#9bbfa8; cursor:default; }
+    button.sec { background:#eee; color:#1b1b1b; }
+    #log { white-space:pre-wrap; font-family: ui-monospace, Consolas, monospace; font-size:12px;
+      background:#fff; border:1px solid #ddd; border-radius:6px; padding:10px; margin-top:12px;
+      min-height:120px; }
+    .ok { color:#0a7d33; } .err { color:#b40e0e; }
+    .badge { display:inline-block; font-size:11px; padding:2px 6px; border-radius:10px; background:#e8f3ec; color:#217346; }
+  </style>
+</head>
+<body>
+  <h1>Follow-up · teste de add-in <span class="badge">go / no-go</span></h1>
+  <p class="sub">Confirma que o Excel deixa carregar o painel e que ele consegue LER e GRAVAR
+    no arquivo aberto. Não toca em nenhuma aba real — só cria/usa a aba <b>_TesteAddin</b>.</p>
+
+  <button id="btnLer">1 · Ler a planilha (contagens)</button>
+  <button id="btnGravar" class="sec">2 · Gravar teste na aba _TesteAddin</button>
+
+  <div id="log">Aguardando… clique em “Ler a planilha”.</div>
+
+  <script>
+    const log = (msg, cls) => {
+      const el = document.getElementById('log');
+      const line = cls ? `<span class="${cls}">${msg}</span>` : msg;
+      el.innerHTML = line + "\n" + el.innerHTML;
+    };
+
+    Office.onReady((info) => {
+      if (info.host !== Office.HostType.Excel) {
+        log("Este painel só roda dentro do Excel.", "err");
+        return;
+      }
+      log("Add-in carregou dentro do Excel. ✔ (metade do go/no-go já passou)", "ok");
+      document.getElementById('btnLer').onclick = ler;
+      document.getElementById('btnGravar').onclick = gravar;
+    });
+
+    async function ler() {
+      try {
+        await Excel.run(async (ctx) => {
+          const alvo = ["PC Geral BR", "PC Geral EUA", "SC Robô",
+                        "Observação BR", "Observação EUA", "Observação SC"];
+          const sheets = ctx.workbook.worksheets;
+          sheets.load("items/name");
+          await ctx.sync();
+          const nomes = sheets.items.map(s => s.name);
+
+          const infos = [];
+          for (const nome of alvo) {
+            if (!nomes.includes(nome)) { infos.push([nome, null]); continue; }
+            const ur = sheets.getItem(nome).getUsedRangeOrNullObject();
+            ur.load("rowCount");
+            infos.push([nome, ur]);
+            await ctx.sync();
+          }
+          log("── LEITURA ──", "ok");
+          for (const [nome, ur] of infos) {
+            if (ur === null) { log(`  • ${nome}: ABA NÃO ENCONTRADA`, "err"); continue; }
+            const rc = ur.isNullObject ? 0 : ur.rowCount;
+            log(`  • ${nome}: ${Math.max(rc-1,0)} linhas de dados`);
+          }
+          log("Leitura OK — o add-in enxerga o arquivo aberto.", "ok");
+        });
+      } catch (e) { log("ERRO na leitura: " + e.message, "err"); }
+    }
+
+    async function gravar() {
+      try {
+        await Excel.run(async (ctx) => {
+          let ws = ctx.workbook.worksheets.getItemOrNullObject("_TesteAddin");
+          await ctx.sync();
+          if (ws.isNullObject) ws = ctx.workbook.worksheets.add("_TesteAddin");
+          const carimbo = new Date().toLocaleString('pt-BR');
+          ws.getRange("A1").values = [["Teste de gravação do add-in"]];
+          ws.getRange("A2").values = [["Se você está lendo isto na planilha, a GRAVAÇÃO funciona:"]];
+          ws.getRange("A3").values = [[carimbo]];
+          ws.getRange("A1:A3").format.autofitColumns();
+          ws.activate();
+          await ctx.sync();
+          log("Gravação OK — veja a aba _TesteAddin. ✔ go/no-go COMPLETO.", "ok");
+          log("Pode apagar a aba _TesteAddin depois.", null);
+        });
+      } catch (e) { log("ERRO na gravação: " + e.message, "err"); }
+    }
+  </script>
+</body>
+</html>
