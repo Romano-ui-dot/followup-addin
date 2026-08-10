@@ -18,8 +18,8 @@
        taskpane.html. Ex.: https://SEU-SITE/taskpane.html
        As duas de icone podem apontar pro mesmo lugar ou um PNG qualquer.
        =================================================================== -->
-  <IconUrl DefaultValue="https://SUBSTITUA-PELA-SUA-URL/icon32.png" />
-  <HighResolutionIconUrl DefaultValue="https://SUBSTITUA-PELA-SUA-URL/icon64.png" />
+  <IconUrl DefaultValue="https://romano-ui-dot.github.io/followup-addin/" />
+  <HighResolutionIconUrl DefaultValue="https://romano-ui-dot.github.io/followup-addin/" />
 
   <Hosts>
     <Host Name="Workbook" />
@@ -27,7 +27,7 @@
 
   <DefaultSettings>
     <!-- URL do taskpane.html hospedado -->
-    <SourceLocation DefaultValue="https://SUBSTITUA-PELA-SUA-URL/taskpane.html" />
+    <SourceLocation DefaultValue="https://romano-ui-dot.github.io/followup-addin/" />
   </DefaultSettings>
 
   <Permissions>ReadWriteDocument</Permissions>
