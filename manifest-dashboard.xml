@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OfficeApp
+  xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+  xsi:type="TaskPaneApp">
+
+  <!-- ID diferente do add-in de teste, para os dois poderem conviver -->
+  <Id>7a2e4c11-9d3f-4a6b-8e12-3f7c9a5d2b61</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>Follow-up FUP</ProviderName>
+  <DefaultLocale>pt-BR</DefaultLocale>
+  <DisplayName DefaultValue="Follow-up" />
+  <Description DefaultValue="Dashboard de follow-up de pedidos: le e grava direto na planilha." />
+
+  <IconUrl DefaultValue="https://romano-ui-dot.github.io/followup-addin/icon32.png" />
+  <HighResolutionIconUrl DefaultValue="https://romano-ui-dot.github.io/followup-addin/icon64.png" />
+
+  <Hosts>
+    <Host Name="Workbook" />
+  </Hosts>
+
+  <DefaultSettings>
+    <SourceLocation DefaultValue="https://romano-ui-dot.github.io/followup-addin/dashboard.html" />
+  </DefaultSettings>
+
+  <Permissions>ReadWriteDocument</Permissions>
+</OfficeApp>
