@@ -288,6 +288,7 @@ tbody tr:hover{background:var(--paper)}
         <table class="lotetbl" id="loteTbl"></table>
       </div>
       <div class="mact">
+        <button class="btn" id="loteSelExatas">Marcar só exatas</button>
         <button class="btn on" id="loteAplicar">Aplicar selecionadas</button>
         <span id="loteAplicarMsg" style="font-size:12px;color:var(--ink-3);align-self:center"></span>
       </div>
@@ -953,10 +954,15 @@ function renderLoteTabela(){
   });
   const tbl = document.getElementById('loteTbl');
   tbl.innerHTML = `<thead><tr>
-      <th></th><th>Código</th><th>Linha na planilha</th><th>Item</th>
+      <th><input type="checkbox" id="loteChkAll" title="Marcar/desmarcar todas"></th>
+      <th>Código</th><th>Linha na planilha</th><th>Item</th>
       <th>Observação atual</th><th>Observação nova</th><th>Tipo</th>
     </tr></thead><tbody>${linhas.join('')}</tbody>`;
   document.getElementById('loteResultWrap').style.display = '';
+  const chkAll = document.getElementById('loteChkAll');
+  if(chkAll) chkAll.onchange = ()=>{
+    document.querySelectorAll('#loteTbl .loteChk').forEach(c=>{ c.checked = chkAll.checked; });
+  };
 }
 
 document.getElementById('loteBtn').onclick = ()=>{
@@ -981,6 +987,17 @@ document.getElementById('loteAnalisar').onclick = ()=>{
   const nNao = loteAnalisado.filter(i=>i.tipo==='nao_encontrado').length;
   msg.textContent = `${itens.length} linhas · ${nExata} exatas · ${nAprox} aproximadas · ${nNao} não encontradas`;
   renderLoteTabela();
+};
+
+document.getElementById('loteSelExatas').onclick = ()=>{
+  document.querySelectorAll('#loteTbl tbody tr').forEach(tr=>{
+    const chk = tr.querySelector('.loteChk');
+    if(!chk) return;
+    const i = Number(tr.dataset.i);
+    chk.checked = loteAnalisado[i] && loteAnalisado[i].tipo === 'exata';
+  });
+  const chkAll = document.getElementById('loteChkAll');
+  if(chkAll) chkAll.checked = false;
 };
 
 document.getElementById('loteAplicar').onclick = async ()=>{
